@@ -20,29 +20,25 @@ jobs:
             echo "extracted/ zaten var, tekrar indirilmiyor"
           fi
 
-      - name: Search for emfc, igsc, and all .ko dependency modules
+      - name: Search for kerSysGetWlanFeature symbol
         run: |
-          echo "=== emfc ile ilgili dosyalar ===" > dep_search_results.txt
-          find extracted -iname "*emfc*" 2>/dev/null >> dep_search_results.txt
-          echo "" >> dep_search_results.txt
-          echo "=== igsc ile ilgili dosyalar ===" >> dep_search_results.txt
-          find extracted -iname "*igsc*" 2>/dev/null >> dep_search_results.txt
-          echo "" >> dep_search_results.txt
-          echo "=== Tum .ko dosyalari (963381GW altinda) ===" >> dep_search_results.txt
-          find extracted -path "*963381GW*" -iname "*.ko" 2>/dev/null >> dep_search_results.txt
-          echo "" >> dep_search_results.txt
-          echo "=== bcmdrivers altindaki tum .ko / modul klasorleri ===" >> dep_search_results.txt
-          find extracted/GPL_W9970V3/4.16L.03/bcmdrivers -maxdepth 4 -type d 2>/dev/null >> dep_search_results.txt
-          echo "" >> dep_search_results.txt
-          echo "=== fs/lib/modules altindaki TUM .ko dosyalari (tam liste) ===" >> dep_search_results.txt
-          find extracted -path "*fs/lib/modules*" -iname "*.ko" 2>/dev/null >> dep_search_results.txt
-          cat dep_search_results.txt
+          echo "=== kerSysGetWlanFeature tanimlandigi/kullanildigi yerler ===" > symbol_search.txt
+          grep -rl "kerSysGetWlanFeature" extracted 2>/dev/null >> symbol_search.txt
+          echo "" >> symbol_search.txt
+          echo "=== EXPORT_SYMBOL(kerSysGetWlanFeature) iceren dosyalar ===" >> symbol_search.txt
+          grep -rl "EXPORT_SYMBOL(kerSysGetWlanFeature)" extracted 2>/dev/null >> symbol_search.txt
+          echo "" >> symbol_search.txt
+          echo "=== Fonksiyon tanimi (context ile) ===" >> symbol_search.txt
+          grep -rn -A3 -B3 "kerSysGetWlanFeature" extracted --include="*.c" 2>/dev/null | head -100 >> symbol_search.txt
+          echo "" >> symbol_search.txt
+          echo "=== Ayni klasordeki diger .ko/module dosyalari (bcmdrivers/opensource/char) ===" >> symbol_search.txt
+          find extracted/GPL_W9970V3/4.16L.03/bcmdrivers/opensource -maxdepth 3 -type d 2>/dev/null >> symbol_search.txt
+          cat symbol_search.txt
 
-      - name: Push results and ko files to repo
+      - name: Push results to repo
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add dep_search_results.txt
-          git add -A -- 'extracted/**/fs/lib/modules/**/*.ko' 2>/dev/null || true
-          git commit -m "emfc/igsc arama sonuclari + modul ko dosyalari" || echo "Degisiklik yok"
+          git add symbol_search.txt
+          git commit -m "kerSysGetWlanFeature sembol arama sonuclari" || echo "Degisiklik yok"
           git push
