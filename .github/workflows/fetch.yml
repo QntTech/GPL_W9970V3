@@ -22,6 +22,7 @@ jobs:
 
       - name: Search for kerSysGetWlanFeature symbol
         run: |
+          set +e
           echo "=== kerSysGetWlanFeature tanimlandigi/kullanildigi yerler ===" > symbol_search.txt
           grep -rl "kerSysGetWlanFeature" extracted 2>/dev/null >> symbol_search.txt
           echo "" >> symbol_search.txt
@@ -34,6 +35,7 @@ jobs:
           echo "=== Ayni klasordeki diger .ko/module dosyalari (bcmdrivers/opensource/char) ===" >> symbol_search.txt
           find extracted/GPL_W9970V3/4.16L.03/bcmdrivers/opensource -maxdepth 3 -type d 2>/dev/null >> symbol_search.txt
           cat symbol_search.txt
+          exit 0
 
       - name: Push results to repo
         run: |
