@@ -1,16 +1,7 @@
-name: Build wl module
+name: Build stub module
 
 on:
   workflow_dispatch:
-    inputs:
-      wl_source_path:
-        description: 'wl surucusu kaynak klasoru (repo icindeki yol, fetch.yml ciktisindan)'
-        required: true
-        default: 'extracted/'
-      kernel_source_path:
-        description: 'Kernel kaynak klasoru (Linux tree, config icin)'
-        required: false
-        default: ''
 
 jobs:
   build:
@@ -23,25 +14,73 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcc-mips-linux-gnu build-essential bc bison flex libssl-dev libelf-dev
 
-      - name: Locate kernel source and wl module source
+      - name: Locate kernel config and Module.symvers
         run: |
-          echo "=== Olasi kernel Makefile'lari ==="
-          find . -maxdepth 6 -iname "Makefile" -path "*kernel*" 2>/dev/null | head -20
-          echo "=== Olasi wl module Makefile'lari ==="
-          find "${{ github.event.inputs.wl_source_path }}" -iname "Makefile" 2>/dev/null | head -20
+          set +e
           echo "=== .config dosyalari ==="
-          find . -maxdepth 6 -iname ".config" 2>/dev/null | head -10
+          find extracted -iname ".config" -path "*963381*" 2>/dev/null
+          find extracted -iname ".config" 2>/dev/null | head -10
+          echo "=== Module.symvers dosyalari ==="
+          find extracted -iname "Module.symvers" 2>/dev/null
+          echo "=== Kernel Makefile konumu ==="
+          find extracted -maxdepth 3 -path "*kernel/linux-3.4rt*" -iname "Makefile" 2>/dev/null
+          exit 0
 
-      - name: Attempt build (manual step - adjust paths after locate step)
+      - name: Write stub source
         run: |
-          echo "Bu adim, locate ciktisina gore Claude tarafindan duzenlenecek."
-          echo "Simdilik sadece kesif yapiyoruz, gercek derleme komutu"
-          echo "dogru KERNEL_DIR ve wl modul yolu belli olunca eklenecek."
+          mkdir -p stub_module
+          cat > stub_module/wlan_feature_stub.c << 'EOF'
+          #include <linux/module.h>
+          #include <linux/kernel.h>
 
-      - name: Upload discovery results
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-discovery
-          path: |
-            **/Makefile
-          if-no-files-found: warn
+          MODULE_LICENSE("GPL");
+          MODULE_DESCRIPTION("Stub for kerSysGetWlanFeature");
+
+          unsigned int kerSysGetWlanFeature(void)
+          {
+              return 0;
+          }
+          EXPORT_SYMBOL(kerSysGetWlanFeature);
+
+          static int __init stub_init(void)
+          {
+              printk(KERN_INFO "kerSysGetWlanFeature stub module loaded\n");
+              return 0;
+          }
+
+          static void __exit stub_exit(void)
+          {
+              printk(KERN_INFO "kerSysGetWlanFeature stub module unloaded\n");
+          }
+
+          module_init(stub_init);
+          module_exit(stub_exit);
+          EOF
+          cat > stub_module/Makefile << 'EOF'
+          obj-m += wlan_feature_stub.o
+          EOF
+          echo "Stub kaynak dosyalari hazir:"
+          ls -la stub_module/
+
+      - name: Attempt kernel module build
+        run: |
+          set +e
+          KDIR=$(find extracted -maxdepth 3 -path "*kernel/linux-3.4rt" -type d 2>/dev/null | head -1)
+          echo "Kernel dizini: $KDIR"
+          if [ -z "$KDIR" ]; then
+            echo "KERNEL DIZINI BULUNAMADI - build atlaniyor"
+            exit 0
+          fi
+          cd stub_module
+          make ARCH=mips CROSS_COMPILE=mips-linux-gnu- -C "$GITHUB_WORKSPACE/$KDIR" M="$PWD" modules 2>&1 | tee build_log.txt
+          echo "=== Build sonucu ==="
+          ls -la *.ko 2>/dev/null || echo "KO DOSYASI OLUSMADI"
+          exit 0
+
+      - name: Push results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add stub_module/ 2>/dev/null || true
+          git commit -m "Stub module build denemesi" || echo "Degisiklik yok"
+          git push
