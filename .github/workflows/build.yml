@@ -14,6 +14,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcc-mips-linux-gnu build-essential bc bison flex libssl-dev libelf-dev
 
+      - name: Download and extract GPL archive
+        run: |
+          curl -sL -o GPL_W9970V3.tar.gz "https://static.tp-link.com/resources/gpl/GPL_W9970V3.tar.gz"
+          ls -la GPL_W9970V3.tar.gz
+          mkdir -p extracted
+          tar -xzf GPL_W9970V3.tar.gz -C extracted || tar -xf GPL_W9970V3.tar.gz -C extracted
+          rm -f GPL_W9970V3.tar.gz
+          echo "Extraction tamamlandi, ust seviye:"
+          ls extracted/
+
       - name: Locate kernel config and Module.symvers
         run: |
           set +e
