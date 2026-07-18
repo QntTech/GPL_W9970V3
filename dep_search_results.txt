@@ -1,0 +1,23 @@
+=== emfc ile ilgili dosyalar ===
+
+=== igsc ile ilgili dosyalar ===
+
+=== Tum .ko dosyalari (963381GW altinda) ===
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wl.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlemf.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlcsm.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wl.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wlemf.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wlcsm.ko
+
+=== bcmdrivers altindaki tum .ko / modul klasorleri ===
+extracted/GPL_W9970V3/4.16L.03/bcmdrivers
+extracted/GPL_W9970V3/4.16L.03/bcmdrivers/broadcom
+extracted/GPL_W9970V3/4.16L.03/bcmdrivers/broadcom/net
+extracted/GPL_W9970V3/4.16L.03/bcmdrivers/broadcom/net/wl
+extracted/GPL_W9970V3/4.16L.03/bcmdrivers/broadcom/net/wl/impl20
+
+=== fs/lib/modules altindaki TUM .ko dosyalari (tam liste) ===
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wl.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlemf.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlcsm.ko
