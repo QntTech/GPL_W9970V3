@@ -1,16 +1,46 @@
 make: Entering directory '/home/runner/work/GPL_W9970V3/GPL_W9970V3/extracted/GPL_W9970V3/4.16L.03/kernel/linux-3.4rt'
   CC [M]  /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.o
-In file included from include/linux/compiler.h:48,
-                 from include/linux/stddef.h:4,
-                 from include/linux/posix_types.h:4,
-                 from include/linux/types.h:17,
-                 from include/linux/list.h:4,
-                 from include/linux/module.h:9,
+In file included from include/linux/kernel.h:20,
+                 from include/linux/cache.h:4,
+                 from include/linux/time.h:7,
+                 from include/linux/stat.h:60,
+                 from include/linux/module.h:10,
                  from /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.c:1:
-include/linux/compiler-gcc.h:119:1: fatal error: linux/compiler-gcc12.h: No such file or directory
-  119 | #include gcc_header(__GNUC__)
-      | ^~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.build:334: /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.o] Error 1
-make: *** [Makefile:1679: _module_/home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module] Error 2
+include/linux/log2.h:22:1: warning: ignoring attribute ‘noreturn’ because it conflicts with attribute ‘const’ [-Wattributes]
+   22 | int ____ilog2_NaN(void);
+      | ^~~
+In file included from include/linux/printk.h:4,
+                 from include/linux/kernel.h:22:
+include/linux/init.h:299:13: warning: ‘init_module’ specifies less restrictive attribute than its target ‘stub_init’: ‘cold’ [-Wmissing-attributes]
+  299 |         int init_module(void) __attribute__((alias(#initfn)));
+      |             ^~~~~~~~~~~
+/home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.c:24:1: note: in expansion of macro ‘module_init’
+   24 | module_init(stub_init);
+      | ^~~~~~~~~~~
+/home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.c:13:19: note: ‘init_module’ target declared here
+   13 | static int __init stub_init(void)
+      |                   ^~~~~~~~~
+include/linux/init.h:305:14: warning: ‘cleanup_module’ specifies less restrictive attribute than its target ‘stub_exit’: ‘cold’ [-Wmissing-attributes]
+  305 |         void cleanup_module(void) __attribute__((alias(#exitfn)));
+      |              ^~~~~~~~~~~~~~
+/home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.c:25:1: note: in expansion of macro ‘module_exit’
+   25 | module_exit(stub_exit);
+      | ^~~~~~~~~~~
+/home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.c:19:20: note: ‘cleanup_module’ target declared here
+   19 | static void __exit stub_exit(void)
+      |                    ^~~~~~~~~
+  Building modules, stage 2.
+  MODPOST 1 modules
+WARNING: /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub: 'kerSysGetWlanFeature' exported twice. Previous export was in vmlinux
+  CC      /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.mod.o
+In file included from include/linux/kernel.h:20,
+                 from include/linux/cache.h:4,
+                 from include/linux/time.h:7,
+                 from include/linux/stat.h:60,
+                 from include/linux/module.h:10,
+                 from /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.mod.c:1:
+include/linux/log2.h:22:1: warning: ignoring attribute ‘noreturn’ because it conflicts with attribute ‘const’ [-Wattributes]
+   22 | int ____ilog2_NaN(void);
+      | ^~~
+  LD [M]  /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.ko
 make: Leaving directory '/home/runner/work/GPL_W9970V3/GPL_W9970V3/extracted/GPL_W9970V3/4.16L.03/kernel/linux-3.4rt'
