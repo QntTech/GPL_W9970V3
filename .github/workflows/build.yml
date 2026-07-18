@@ -13,6 +13,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-mips-linux-gnu build-essential bc bison flex libssl-dev libelf-dev
+          mips-linux-gnu-gcc --version
+          echo "--- Denenecek alternatif: kernel'in kendi compiler uyumluluk fix'i ---"
 
       - name: Download and extract GPL archive
         run: |
@@ -77,8 +79,20 @@ jobs:
           set +e
           KDIR="extracted/GPL_W9970V3/4.16L.03/kernel/linux-3.4rt"
           echo "Kernel dizini: $KDIR"
-          ls "$KDIR" | head -20
-          echo "--- Makefile var mi ---"
+
+          # GCC version uyumluluk workaround: yeni GCC (12+) icin
+          # compiler-gccX.h dosyasi yok, en yuksek mevcut olanina sembolik link
+          echo "--- Mevcut compiler-gcc*.h dosyalari ---"
+          ls "$KDIR/include/linux/" | grep compiler-gcc
+          HIGHEST=$(ls "$KDIR/include/linux/" | grep -oP 'compiler-gcc\K[0-9]+' | sort -n | tail -1)
+          echo "En yuksek mevcut versiyon: gcc$HIGHEST"
+          GCCVER=$(mips-linux-gnu-gcc -dumpversion | cut -d. -f1)
+          echo "Kullanilan gcc versiyonu: $GCCVER"
+          if [ ! -f "$KDIR/include/linux/compiler-gcc${GCCVER}.h" ]; then
+            cp "$KDIR/include/linux/compiler-gcc${HIGHEST}.h" "$KDIR/include/linux/compiler-gcc${GCCVER}.h"
+            echo "compiler-gcc${GCCVER}.h olusturuldu (compiler-gcc${HIGHEST}.h kopyasi)"
+          fi
+
           ls "$KDIR/Makefile" 2>/dev/null || echo "Makefile YOK"
           if [ -z "$KDIR" ]; then
             echo "KERNEL DIZINI BULUNAMADI - build atlaniyor"
