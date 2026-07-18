@@ -75,8 +75,11 @@ jobs:
       - name: Attempt kernel module build
         run: |
           set +e
-          KDIR=$(find extracted -maxdepth 3 -path "*kernel/linux-3.4rt" -type d 2>/dev/null | head -1)
+          KDIR="extracted/GPL_W9970V3/4.16L.03/kernel/linux-3.4rt"
           echo "Kernel dizini: $KDIR"
+          ls "$KDIR" | head -20
+          echo "--- Makefile var mi ---"
+          ls "$KDIR/Makefile" 2>/dev/null || echo "Makefile YOK"
           if [ -z "$KDIR" ]; then
             echo "KERNEL DIZINI BULUNAMADI - build atlaniyor"
             exit 0
