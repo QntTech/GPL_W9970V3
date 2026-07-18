@@ -1,0 +1,47 @@
+name: Build wl module
+
+on:
+  workflow_dispatch:
+    inputs:
+      wl_source_path:
+        description: 'wl surucusu kaynak klasoru (repo icindeki yol, fetch.yml ciktisindan)'
+        required: true
+        default: 'extracted/'
+      kernel_source_path:
+        description: 'Kernel kaynak klasoru (Linux tree, config icin)'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MIPS toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mips-linux-gnu build-essential bc bison flex libssl-dev libelf-dev
+
+      - name: Locate kernel source and wl module source
+        run: |
+          echo "=== Olasi kernel Makefile'lari ==="
+          find . -maxdepth 6 -iname "Makefile" -path "*kernel*" 2>/dev/null | head -20
+          echo "=== Olasi wl module Makefile'lari ==="
+          find "${{ github.event.inputs.wl_source_path }}" -iname "Makefile" 2>/dev/null | head -20
+          echo "=== .config dosyalari ==="
+          find . -maxdepth 6 -iname ".config" 2>/dev/null | head -10
+
+      - name: Attempt build (manual step - adjust paths after locate step)
+        run: |
+          echo "Bu adim, locate ciktisina gore Claude tarafindan duzenlenecek."
+          echo "Simdilik sadece kesif yapiyoruz, gercek derleme komutu"
+          echo "dogru KERNEL_DIR ve wl modul yolu belli olunca eklenecek."
+
+      - name: Upload discovery results
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-discovery
+          path: |
+            **/Makefile
+          if-no-files-found: warn

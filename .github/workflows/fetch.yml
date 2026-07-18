@@ -1,0 +1,49 @@
+name: Fetch GPL Source
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download GPL archive
+        run: |
+          curl -sL -o GPL_W9970V3.tar.gz "https://static.tp-link.com/resources/gpl/GPL_W9970V3.tar.gz"
+          ls -la GPL_W9970V3.tar.gz
+          file GPL_W9970V3.tar.gz
+
+      - name: Extract archive
+        run: |
+          mkdir -p extracted
+          tar -xzf GPL_W9970V3.tar.gz -C extracted || tar -xf GPL_W9970V3.tar.gz -C extracted
+          find extracted -maxdepth 3 -type d | sort
+
+      - name: Find wireless/wl related files
+        run: |
+          echo "=== wl ilgili klasorler ===" > wl_search_results.txt
+          find extracted -iname "*wl*" -type d 2>/dev/null >> wl_search_results.txt
+          echo "" >> wl_search_results.txt
+          echo "=== wl.ko dosyalari ===" >> wl_search_results.txt
+          find extracted -iname "wl.ko" 2>/dev/null >> wl_search_results.txt
+          echo "" >> wl_search_results.txt
+          echo "=== wlc/wl kaynak dosyalari (.c/.h) ic bcm klasorlerinde ===" >> wl_search_results.txt
+          find extracted -ipath "*wl*" \( -iname "*.c" -o -iname "*.h" \) 2>/dev/null | grep -i "sta\|apsta\|client" >> wl_search_results.txt
+          echo "" >> wl_search_results.txt
+          echo "=== Tum dizin agaci (3 seviye) ===" >> wl_search_results.txt
+          find extracted -maxdepth 4 -type d 2>/dev/null | sort >> wl_search_results.txt
+          cat wl_search_results.txt
+
+      - name: Push extracted source to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          # Buyuk arsivi repoya komple pushlamak yerine sadece arama sonuclarini
+          # ve wl ile ilgili klasorleri pushluyoruz (repo boyutu tasmasin diye)
+          rm -f GPL_W9970V3.tar.gz
+          git add wl_search_results.txt
+          git add -A -- 'extracted/**/*wl*' 2>/dev/null || true
+          git commit -m "GPL source fetch + wl arama sonuclari" || echo "Degisiklik yok"
+          git push
