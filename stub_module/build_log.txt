@@ -1,0 +1,16 @@
+make: Entering directory '/home/runner/work/GPL_W9970V3/GPL_W9970V3/extracted/GPL_W9970V3/4.16L.03/kernel/linux-3.4rt'
+  CC [M]  /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.o
+In file included from include/linux/compiler.h:48,
+                 from include/linux/stddef.h:4,
+                 from include/linux/posix_types.h:4,
+                 from include/linux/types.h:17,
+                 from include/linux/list.h:4,
+                 from include/linux/module.h:9,
+                 from /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.c:1:
+include/linux/compiler-gcc.h:119:1: fatal error: linux/compiler-gcc12.h: No such file or directory
+  119 | #include gcc_header(__GNUC__)
+      | ^~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.build:334: /home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module/wlan_feature_stub.o] Error 1
+make: *** [Makefile:1679: _module_/home/runner/work/GPL_W9970V3/GPL_W9970V3/stub_module] Error 2
+make: Leaving directory '/home/runner/work/GPL_W9970V3/GPL_W9970V3/extracted/GPL_W9970V3/4.16L.03/kernel/linux-3.4rt'
