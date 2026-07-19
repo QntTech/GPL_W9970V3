@@ -16,31 +16,31 @@ jobs:
             mkdir -p extracted
             tar -xzf GPL_W9970V3.tar.gz -C extracted || tar -xf GPL_W9970V3.tar.gz -C extracted
             rm -f GPL_W9970V3.tar.gz
-          else
-            echo "extracted/ zaten var, tekrar indirilmiyor"
           fi
 
-      - name: Search for kerSysGetWlanFeature symbol
+      - name: Search for emfc/igsc/wmf modules
         run: |
           set +e
-          echo "=== kerSysGetWlanFeature tanimlandigi/kullanildigi yerler ===" > symbol_search.txt
-          grep -rl "kerSysGetWlanFeature" extracted 2>/dev/null >> symbol_search.txt
-          echo "" >> symbol_search.txt
-          echo "=== EXPORT_SYMBOL(kerSysGetWlanFeature) iceren dosyalar ===" >> symbol_search.txt
-          grep -rl "EXPORT_SYMBOL(kerSysGetWlanFeature)" extracted 2>/dev/null >> symbol_search.txt
-          echo "" >> symbol_search.txt
-          echo "=== Fonksiyon tanimi (context ile) ===" >> symbol_search.txt
-          grep -rn -A3 -B3 "kerSysGetWlanFeature" extracted --include="*.c" 2>/dev/null | head -100 >> symbol_search.txt
-          echo "" >> symbol_search.txt
-          echo "=== Ayni klasordeki diger .ko/module dosyalari (bcmdrivers/opensource/char) ===" >> symbol_search.txt
-          find extracted/GPL_W9970V3/4.16L.03/bcmdrivers/opensource -maxdepth 3 -type d 2>/dev/null >> symbol_search.txt
-          cat symbol_search.txt
+          echo "=== emf ile ilgili .c dosyalari ===" > emf_search.txt
+          grep -rl "EXPORT_SYMBOL(emfc_init)" extracted 2>/dev/null >> emf_search.txt
+          grep -rl "EXPORT_SYMBOL(igsc_init)" extracted 2>/dev/null >> emf_search.txt
+          grep -rl "EXPORT_SYMBOL(wmf_ipv6_enabled)" extracted 2>/dev/null >> emf_search.txt
+          echo "" >> emf_search.txt
+          echo "=== tum emf/igmp/wmf .ko dosyalari ===" >> emf_search.txt
+          find extracted -path "*963381GW*" -iname "*.ko" 2>/dev/null >> emf_search.txt
+          echo "" >> emf_search.txt
+          echo "=== bcmdrivers/opensource/net altinda emf/igmp klasorleri ===" >> emf_search.txt
+          find extracted/GPL_W9970V3/4.16L.03/bcmdrivers -iname "*emf*" -o -iname "*igmp*" -o -iname "*wmf*" 2>/dev/null >> emf_search.txt
+          echo "" >> emf_search.txt
+          echo "=== TUM .ko dosyalari (butun projede) ===" >> emf_search.txt
+          find extracted -iname "*.ko" 2>/dev/null | grep -v "fs.dir\|fakeroot" >> emf_search.txt
+          cat emf_search.txt
           exit 0
 
-      - name: Push results to repo
+      - name: Push results
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add symbol_search.txt
-          git commit -m "kerSysGetWlanFeature sembol arama sonuclari" || echo "Degisiklik yok"
+          git add emf_search.txt
+          git commit -m "emf/igsc/wmf modul arama sonuclari" || echo "Degisiklik yok"
           git push
