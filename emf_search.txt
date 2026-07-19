@@ -1,0 +1,20 @@
+=== emf ile ilgili .c dosyalari ===
+
+=== tum emf/igmp/wmf .ko dosyalari ===
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wl.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlemf.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlcsm.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wl.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wlemf.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wlcsm.ko
+
+=== bcmdrivers/opensource/net altinda emf/igmp klasorleri ===
+extracted/GPL_W9970V3/4.16L.03/bcmdrivers/broadcom/net/wl/impl20/wlemf963381GW.o_save
+
+=== TUM .ko dosyalari (butun projede) ===
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wl.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlemf.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/fs/lib/modules/3.4.11-rt19/extra/wlcsm.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wl.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wlemf.ko
+extracted/GPL_W9970V3/4.16L.03/targets/963381GW/modules/lib/modules/3.4.11-rt19/extra/wlcsm.ko
